@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+#include <map>
+#include "Zad1_28-1_40.h"
+
 using namespace std;
 
 
@@ -24,33 +27,8 @@ v1[2] - zwraca trzeci element wektora
 v1.begin() - iterator na pierwszy element wektora
 v1.end() - iterator na element za ostatnim elementem wektora
 v1.insert(v1.begin() + 2, a) - wstawia element a na trzecie miejsce wektora
+
 */
-int zad1_1(unsigned a, unsigned b, unsigned c);
-void zad1_2(int a);
-void zad1_3(int a);
-void zad1_4(char a);
-void zad1_5(float a, float b, float c, float d, float e);
-void zad1_6(); int zad1_7(); int zad1_8(); int zad1_9(); void zad1_10(); void zad1_11(); void zad1_12(); void zad1_13();void zad1_14(); void zad1_15(); void zad1_16(); void zad1_17(); void zad1_18();void zad1_19(); void zad1_20();void zad1_21(); void zad1_22();
-void zad1_23(); void zad1_24(); void zad1_25();
-int main() {
-	unsigned a, b, c;
-	char d;
-	float f, g;
-	//cout << "Podaj trzy liczby dodatnie : " << endl;
-	//cin >> a >> b >> c;
-	//zad1_1(a, b, c);
-	//zad1_2(a);
-	//zad1_3(a);
-	//cout << "Podaj znak: " << endl;
-	//cin >> d;
-	//zad1_4(d);
-	//cout << "Podaj dwie liczby: " << endl;
-	//cin >> f >> g;
-	//zad1_5(float(a), float(b), float(c), f, g);
-	//zad1_6(); cout<<zad1_7()<<endl; zad1_8(); zad1_9(); zad1_10(); zad1_11(); zad1_12(); zad1_13(); zad1_14(); zad1_15(); zad1_16(); zad1_17();zad1_18();zad1_19(); zad1_20(); zad1_23(); zad1_24();
-	zad1_25();
-	return 0;
-}
 /*zadanie 1.1 Pobierz z klawiatury trzy nieujemne liczby całkowite. Znajdź największą z nich. Wyświetl sumę pozostałych liczb tyle razy, ile wynosi wartość największej liczby.*/
 int zad1_1(unsigned a, unsigned b, unsigned c) {
 	//unsigned zamienia liczby ujemne na liczby dodatnie!
@@ -413,13 +391,49 @@ void zad1_25() {
 }
 
 
-/* zadanie 1.26 Utwórz wektor zawierający następujące cyfry (można skopiować z pliku 26_vector.txt):
+/* zadanie 1.26 Utwórz wektor zawierający następujące cyfry:
 v1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0}
 Wykonaj następujące polecenia:
 Znajdź w wektorze i wyświetl wszystkie podciągi trójelementowe (trzy kolejne liczby z wektora), które tworzą ciągi niemalejące. [1]
 Znajdź jeden najdłuższy podciąg niemalejący. [3]
 Policz liczbę wystąpień każdej liczby w wektorze. [2]
 */
+void zad1_26() {
+	int licznik = 1;
+	int temp = 0;
+	int wystapienia = 0;
+	int pierwszy = 0;
+	int ostatni = 0;
+	vector<int>v1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+	for (int i = 0; i < v1.size()-2;i++) {
+		if (v1[i] <= v1[i + 1] && v1[i + 1] <= v1[i + 2]) cout << "Podciąg: " << v1[i] << " " << v1[i + 1] << " " << v1[i + 2] << endl;;
+	}
+	for (int j = 0; j < v1.size() - 1; j++) {
+		if (v1[j] <= v1[j + 1]) {
+			licznik++;
+			if (licznik > temp) {
+				temp = licznik;
+				ostatni = j + 1;
+				pierwszy = ostatni - temp+1;
+			}
+		}
+		else if (v1[j] > v1[j + 1]){
+			licznik = 0;
+		}
+	}
+	cout << "Najdluzszy podciag niemalejacy: " << temp << endl;
+	for (int j = pierwszy;j <= ostatni;j++) {
+		cout << v1[j] << " ";
+	}
+	map<int, int>mapa;
+	for (int num : v1) {
+		mapa[num]++;
+	}
+	cout << "Liczba wystapien kazdej liczby : " << endl;
+	for (const auto& pair : mapa) {
+		cout << pair.first << " wystapila " << pair.second <<"razy " << endl;
+	}
+ }
 
 /*zadanie 1.27 Utwórz trzy wektory z następującą zawartością:
 v1 = {1, 3, 5, 7, 9}
@@ -431,3 +445,77 @@ Dla podanych wektorów/zbiorów wyświetl:
 a) Część wspólną zbiorów: v1 ∩ v2 [1]
 b) Różnicę zbioru v3 i sumy zbiorów v1 + v2: v3 - (v1 ∪ v2) [4]
 c) Sumę wszystkich zbiorów v1, v2 i v3: v1 ∪ v2 ∪ v3 [2]*/
+
+void zad1_27() {
+	vector<int>v1 = { 1, 3, 5, 7, 9 };
+	vector<int>v2 = { 1, 4, 7, 11, 15 };
+	vector<int>v3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 20 };
+	vector<int>wspolna;
+	vector<int>suma;
+	vector<int>roznica; //{2,6,8,20}
+	vector<int>sumaWszystkich;
+	for (int i = 0;i < v1.size();i++) {
+		for (int j = 0; j < v2.size();j++) {
+			if (v1[i] == v2[j]) wspolna.push_back(v1[i]);
+		}
+	}
+	for (int i = 0;i < wspolna.size();i++) {
+		cout << wspolna[i] << " ";
+	}
+	for (int i = 0;i < v1.size(); i++) {
+		suma.push_back(v1[i]);
+	}
+	for (int i = 0; i < v2.size();i++) {
+		if(find(suma.begin(), suma.end(), v2[i])==suma.end()) {
+			suma.push_back(v2[i]);
+		}
+	}
+	roznica = v3;
+	for (auto it = roznica.begin(); it != roznica.end(); ) {
+		if (find(suma.begin(), suma.end(), *it) != suma.end()) {//iterator to pointer, * referencja, inaczej by porównywało wartość iteratora z wartością
+			it = roznica.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+
+	cout << "Roznica" << endl;
+	for (int i : roznica) cout << i << " ";
+
+	sumaWszystkich = v1;
+	for (int i = 0; i < v2.size();i++) {
+		if (find(sumaWszystkich.begin(), sumaWszystkich.end(), v2[i]) == sumaWszystkich.end()) {
+			sumaWszystkich.push_back(v2[i]);
+		}
+	}
+	for (int i = 0;i < v3.size();i++) {
+		if (find(sumaWszystkich.begin(), sumaWszystkich.end(), v3[i]) == sumaWszystkich.end()) {
+			sumaWszystkich.push_back(v3[i]);
+		}
+	}
+	cout << "Suma wszystkich" << endl;
+	for (int i : sumaWszystkich) {
+		cout << i << " ";
+	}
+}
+int main() {
+	unsigned a, b, c;
+	char d;
+	float f, g;
+	//cout << "Podaj trzy liczby dodatnie : " << endl;
+	//cin >> a >> b >> c;
+	//zad1_1(a, b, c);
+	//zad1_2(a);
+	//zad1_3(a);
+	//cout << "Podaj znak: " << endl;
+	//cin >> d;
+	//zad1_4(d);
+	//cout << "Podaj dwie liczby: " << endl;
+	//cin >> f >> g;
+	//zad1_5(float(a), float(b), float(c), f, g);
+	//zad1_6(); cout<<zad1_7()<<endl; zad1_8(); zad1_9(); zad1_10(); zad1_11(); zad1_12(); zad1_13(); zad1_14(); zad1_15(); zad1_16(); zad1_17();zad1_18();zad1_19(); zad1_20(); zad1_23(); zad1_24(); zad1_25();zad1_26(); zad1_27(); zad1_32_33();
+	zad1_39();
+
+	return 0;
+}
