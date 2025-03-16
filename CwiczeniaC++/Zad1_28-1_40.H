@@ -1,10 +1,9 @@
 #pragma once
-#ifndef ZAD1_28_1_40_H
-#define ZAD1_28_1_40_H
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cmath>
 using namespace std;
 void zad1_28();
 void zad1_29();
@@ -16,4 +15,3 @@ void zad1_36();
 void zad1_37();
 void zad1_38();
 void zad1_39();
-#endif // ZAD1_28_1_40_H
