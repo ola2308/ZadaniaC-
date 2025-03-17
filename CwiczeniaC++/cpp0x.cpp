@@ -1,4 +1,6 @@
-﻿/*wskaźniki: Napisz funkcję void sortuj(int* begin, int* end), która dowolną metodą sortuje liczby w tablicy, podanej przez wskaźnik na pierwszy element i element za końcem tablicy. Weź funkcję wypisz() z przykładu i użyj tego main():
+﻿#include"cpp0x.h"
+
+/*wskaźniki: Napisz funkcję void sortuj(int* begin, int* end), która dowolną metodą sortuje liczby w tablicy, podanej przez wskaźnik na pierwszy element i element za końcem tablicy. Weź funkcję wypisz() z przykładu i użyj tego main():
 int main()
 {
     int tab[ 10 ] = { 0, 9, 1, 3, 8, 2, 6, 7, 5, 4 };
@@ -44,9 +46,84 @@ int main()
 link: https://cpp0x.pl/kursy/Kurs-C++/Poziom-5/Wskazniki/580
 https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Wskazniki/304
 */
+void wypisz(int* begin, int size)
+{
+    while (size > 0)
+    {
+        std::cout << *begin << ' ';
+        ++begin;
+        --size;
+    }
+}
+//od najmniejszego do najwiekszego, algorytm sortowania bąbelkowego tzn pierwszy element porównujemy 
+//z kolejnym, ten sam element z kolejnym 
+/*
+[5, 3, 8, 2, 1]   ➔ Porównaj 5 i 3 ➔ Zamiana
+[3, 5, 8, 2, 1]   ➔ Porównaj 5 i 8 ➔ OK
+[3, 5, 8, 2, 1]   ➔ Porównaj 8 i 2 ➔ Zamiana
+[3, 5, 2, 8, 1]   ➔ Porównaj 8 i 1 ➔ Zamiana
+[3, 5, 2, 1, 8]   ➔ Największy element jest na końcu
+*/
+void sortuj(int* begin, int* end) {
+    for (int* i = begin; i < end-1;i++) {
+        for (int* j = begin; j < end -1 - (i - begin);j++) {
+            int temp = *j;
+            *j = *(j + 1);
+            *(j + 1) = temp;
+        }
+    }
+}
+/*
+Napisz program, który:
+Zdefiniuje tablicę liczb całkowitych o stałym rozmiarze (np. 10 elementów).
+Wypełni tablicę liczbami losowymi z zakresu <1; 50>.
+Znajdzie:
+Największy element oraz jego adres w pamięci.
+Najmniejszy element oraz jego adres w pamięci.
+Policz sumę wszystkich elementów w tablicy.
+Wypisz całą tablicę, używając wskaźników zamiast indeksów tablicy.
+*/
+
+void wskazniki1() {
+    srand(time(NULL));
+    int tablica[10];
+    int* max = &tablica[0];
+    int* min = &tablica[0];
+    int suma = 0;
+    for (int i = 0; i < 10;i++) {
+        tablica[i] = rand() % 50 + 1;
+    }
+    for (int i = 0;i < 10;i++) {
+        if (*max < tablica[i]) max = &tablica[i];
+        if (*min > tablica[i]) min = &tablica[i];
+        suma += tablica[i];
+        cout << *(tablica + i) << endl;
+    }
+    cout << "Suma: " << suma << endl;
+    cout <<"Min: "<< *min <<" Adres min: " << min << endl;
+    cout <<"Max: "<<*max<<" Adres max : " << max << endl;
+}
+
 /*wskaźnik this: 
 link: https://cpp0x.pl/kursy/Programowanie-obiektowe-C++/Podstawy/Wskaznik-this/492
+Utwórz klasę Punkt, reprezentującą punkt w przestrzeni 2D z współrzędnymi x i y. Zaimplementuj w tej klasie metodę porownaj, która przyjmuje jako argument referencję do innego obiektu typu Punkt i porównuje go z bieżącym obiektem. 
+Metoda powinna zwracać:​
+true, jeśli oba punkty mają takie same współrzędne,​
+false w przeciwnym razie.
 */
+void Klasa::m(Klasa& x) {
+    if (this == &x)
+        std::cout << "Uzyto tego samego obiektu" << std::endl;
+    else
+        std::cout << "Uzyto innego obiektu" << std::endl;
+}
+
+Punkt::Punkt(int x, int y) : x(x), y(y) {}
+
+bool Punkt::porownaj(const Punkt& innyPunkt) const {
+    return(this->x == innyPunkt.x && this->y == innyPunkt.y);
+}
+
 /*zarządzanie pamięcią new delete: Zmodyfikuj przykładowy kod tak, aby nowa tablica nie była tworzona za każdym razem, gdy dodawany jest nowy element.
 int main()
 {
@@ -87,7 +164,90 @@ int main()
     delete[] tablica;
 }
 link: https://cpp0x.pl/kursy/Kurs-C++/Poziom-5/Zarzadzanie-pamiecia-new-delete/581
-https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Dynamiczne-zarzadzanie-pamiecia-new-i-delete/307*/
+https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Dynamiczne-zarzadzanie-pamiecia-new-i-delete/307 */
+
+void newIDelete() {
+    int* tablica = nullptr;
+    int rozmiar = 0;
+    int pojemnosc = 1;
+    tablica = new int[pojemnosc];
+    cout << "Podawaj liczby, 0 konczy wczytywanie: " << endl;
+
+    while (true) {
+        int liczba;
+        cin >> liczba;
+        if (liczba == 0) break;
+        if (rozmiar == pojemnosc) {
+            pojemnosc *= 2;
+            int* nowa = new int[pojemnosc]; // Tworzenie większej tablicy
+            for (int i = 0; i < rozmiar;++i) nowa[i] = tablica[i];
+            delete[] tablica; // Usuwanie starej tablicy
+
+            tablica = nowa; //aktualizacja wskaźnika
+        }
+        tablica[rozmiar++] = liczba;
+    }
+    std::cout << "Te same liczby, ale odwrotnie: " << endl;
+    for (int i = rozmiar - 1; i >= 0;--i)
+        cout << tablica[i] << " ";
+    delete[] tablica;
+
+}
+/*
+ Stwórz program, który będzie działał jak dynamiczny stos (stack):
+
+✅ Program powinien:
+
+Przechowywać liczby całkowite.
+Mieć funkcję push do dodawania elementu na górę stosu.
+Mieć funkcję pop do zdejmowania elementu ze stosu (wypisując go na ekran).
+Wydajnie zarządzać pamięcią – zwiększając tablicę dynamicznie tylko wtedy, gdy jest pełna.
+Zwolnić pamięć po zakończeniu działania programu.
+*/
+
+
+/* wskaźniki inteligentne:
+Zadanie: Zarządzanie kolekcją książek za pomocą wskaźników inteligentnych
+Opis:
+Napisz program w języku C++, który zarządza kolekcją książek w bibliotece, wykorzystując wskaźniki inteligentne.
+Wymagania:
+Zdefiniuj klasę Ksiazka z polami tytul i autor.​
+Zaimplementuj klasę Biblioteka, która przechowuje książki za pomocą wskaźników inteligentnych, np. std::shared_ptr.​
+Klasa Biblioteka powinna umożliwiać dodawanie książek oraz wyświetlanie ich listy.​
+Wskazówki:
+Użyj kontenera, takiego jak std::vector, do przechowywania wskaźników inteligentnych.​
+Wskaźniki inteligentne automatycznie zarządzają pamięcią, co pomaga uniknąć wycieków
+
+link https://cpp0x.pl/kursy/Kurs-C++/Poziom-5/Wskazniki-inteligentne-C++11/582 */
+
+
+/*klasy:
+Opis:
+Napisz program w języku C++, który definiuje klasę Prostokat reprezentującą prostokąt o określonych wymiarach. Klasa powinna umożliwiać:
+Ustawienie długości i szerokości prostokąta.​
+Obliczenie pola prostokąta.​
+Obliczenie obwodu prostokąta.​
+Wymagania:
+
+Zdefiniuj klasę Prostokat z prywatnymi polami dlugosc i szerokosc typu double.​
+Udostępnij publiczne metody:​
+Konstruktor bezparametrowy inicjujący długość i szerokość na 1.​
+Konstruktor z parametrami umożliwiający ustawienie długości i szerokości.​
+Metody ustawDlugosc(double dl) i ustawSzerokosc(double sz) do ustawiania wymiarów prostokąta.​
+Metody pobierzDlugosc() i pobierzSzerokosc() zwracające aktualne wymiary prostokąta.​
+Metodę obliczPole() zwracającą pole prostokąta.​
+Metodę obliczObwod() zwracającą obwód prostokąta.
+link: https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Klasy-obiekty/311 */
+
+Prostokat::Prostokat(int x, int y) : x(x), y(y) {}
+
+int Prostokat::pole() const {
+    return x * y;
+};
+int Prostokat::obwod() const {
+    return 2 * x + 2 * y;
+}
+
 
 /*struktury: Napisz funkcję
 void dodajPoczatek( Lista *& lista, int liczba )
@@ -308,25 +468,7 @@ Funkcji a tablice,
 usuwając z nich linijkę using namespace std; i zastosuj odpowiednie mechanizmy przestrzeni nazw.
 link: https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Przestrzenie-nazw/309 */
 
-/*klasy: 
-Opis:
 
-Napisz program w języku C++, który definiuje klasę Prostokat reprezentującą prostokąt o określonych wymiarach. Klasa powinna umożliwiać:
-
-Ustawienie długości i szerokości prostokąta.​
-Obliczenie pola prostokąta.​
-Obliczenie obwodu prostokąta.​
-Wymagania:
-
-Zdefiniuj klasę Prostokat z prywatnymi polami dlugosc i szerokosc typu double.​
-Udostępnij publiczne metody:​
-Konstruktor bezparametrowy inicjujący długość i szerokość na 1.​
-Konstruktor z parametrami umożliwiający ustawienie długości i szerokości.​
-Metody ustawDlugosc(double dl) i ustawSzerokosc(double sz) do ustawiania wymiarów prostokąta.​
-Metody pobierzDlugosc() i pobierzSzerokosc() zwracające aktualne wymiary prostokąta.​
-Metodę obliczPole() zwracającą pole prostokąta.​
-Metodę obliczObwod() zwracającą obwód prostokąta.
-link: https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Klasy-obiekty/311 */
 
 /*metody: 
 Opis:

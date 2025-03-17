@@ -395,27 +395,30 @@ Efektem ma byæ figura jak w przyk³adzie ni¿ej dla n=7:
 Zadbaj o to, aby obie figury rysowa³a funkcja otrzymuj¹ca jako argumenty znak i n.
 */
 
+void zad2_20(char znak) {
+	int n;
+	do {
+		n = rand() % 15 + 7;
+	} while (n % 2 != 0);
+	//góra
+	for (int i = 1; i <= n; i += 2) {
+		for (int j = 0; j < (n - i) / 2; j++) {
+			cout << " ";
+		}
+		for (int j = 0; j < i; j++) {
+			cout << znak;
+		}
+		cout << endl;
+	}
+	//dó³
+	for (int i = n - 2; i >= 0; i -= 2) {
+		for (int j = 0; j < (n - i) / 2;j++) {
+			cout << " ";
+		}
+		for (int j = 0; j <= i;j++) {
+			cout << znak;
+		}
+		cout << endl;
+	}
 
-/*zadanie 2.21 Narysuj „kwadrat” z³o¿ony ze znaków # dla dowolnego ca³kowitego n z przedzia³u <5;12>.
-Jedno z wewnêtrznych pól (wylosuj które) ma byæ znakiem 0, a nie znakiem #.
-Nie mo¿e to byæ krawêdŸ „kwadratu”!
-Na przyk³ad:
-#####
-#####
-##0##
-#####
-#####
-Nastêpnie zrób to samo, ale kwadrat ma byæ pusty w œrodku (spacje) i posiadaæ tylko krawêdzie.
-Znak 0 ponownie nie mo¿e znajdowaæ siê na krawêdzi.
-#####
-#   #
-# 0 #
-#   #
-#####
- */
-
-
-/*zadanie 2.23Utwórz funkcjê pozwalaj¹c¹ wykonaæ dzia³anie potêgowania liczby wymiernej (double) z potêg¹ naturaln¹ (ca³kowit¹ nieujemn¹) i zwracaj¹c¹ wynik takiej potêgi.
-Utwórz przeci¹¿enie funkcji dla potêgi ca³kowitej (czyli mo¿e byæ potêga ujemna).
-Do obliczenia potêgi wykorzystaj techniki iteracyjne. [1]
-Nastêpnie spróbuj wykorzystaæ rekurencjê.*/
+}

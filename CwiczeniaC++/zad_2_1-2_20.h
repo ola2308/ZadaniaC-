@@ -27,3 +27,4 @@ void zad2_16();
 void zad2_17();
 void zad2_18();
 void zad2_19();
+void zad2_20(char znak);
