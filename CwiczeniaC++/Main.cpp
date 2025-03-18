@@ -5,7 +5,79 @@
 #include"ulamek.h"
 #include"polimorfizm.h"
 #include "strumienie.h"
+#include "szablony.h"
+#include"PlikiBinarne.h"
+#include <thread>
+#include <exception>
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include "Dane.h"
+
 using namespace std;
+
+	namespace Gra {
+		class Postac {
+		public:
+			void przedstaw() const { cout << "Jestem postacią z gry!" << endl; }
+		};
+
+		// Funkcja w przestrzeni nazw Gra
+		void pokaz(const Postac& p) {
+			cout << "Prezentacja postaci w grze:" << endl;
+			p.przedstaw();
+		}
+	}
+
+	//Klasa bazowa CRTP
+	template <typename T>
+	class Postac {
+	public:
+		void atak() {
+			static_cast<T*>(this)->atak();  //rzutuje wskaźnik this na typ klasy pochodnej
+		}
+		//this wskazuje na adres obiektu klasy pochodnej 
+	};
+
+	class Wojownik : public Postac<Wojownik> {
+	public:
+		void atak() { cout << "Wojownik uderza mieczem!" << endl; }
+	};
+
+	class Mag : public Postac<Mag> {
+	public:
+		void atak() { cout << "Mag rzuca zaklecie!" << endl; }
+	};
+	class Licznik {
+	private:
+		mutable mutex mtx;//`mutable` umożliwia modyfikację mutexa w metodzie `const`
+		int licznik = 0;// Licznik chroniony przez mutex
+		int suma = 0;// Dodatkowa zmienna do pokazania `unique_lock`
+
+	public:
+		//Metoda używająca `lock_guard` — prostsze, automatyczne blokowanie
+		void zwiekszLockGuard(int wartosc) {
+			lock_guard<mutex> lock(mtx);  //Automatyczne zablokowanie mutexa
+			licznik += wartosc;
+			cout << "[LockGuard] Licznik po zwiększeniu: " << licznik << endl;
+		}
+
+		//Metoda używająca `unique_lock` — elastyczne blokowanie mutexa
+		void zwiekszUniqueLock(int wartosc) {
+			unique_lock<mutex> lock(mtx); //Elastyczne blokowanie mutexa
+			suma += wartosc;
+			cout << "[UniqueLock] Suma po zwiększeniu: " << suma << endl;
+
+			lock.unlock();  //`unique_lock` umożliwia wcześniejsze odblokowanie
+			cout << "[UniqueLock] Mutex odblokowany przed końcem funkcji!" << endl;
+		}
+
+		//Metoda `const` z `mutable` — pozwala na modyfikację `licznik` mimo `const`
+		void pokazLicznik() const {
+			lock_guard<mutex> lock(mtx);  //`mutable` pozwala na blokowanie mutexa w `const`
+			cout << "[Mutable] Aktualny licznik: " << licznik << endl;
+		}
+	};
 int main() {
 	//unsigned a, b, c;
 	//char d;
@@ -134,12 +206,52 @@ int main() {
 
 	transform(trzy.begin(), trzy.end(), trzy.begin(), ::tolower);
 	cout << trzy << endl;
+	string napis = "Ala ma kota";
+	string szukaj = "kot";
+	size_t pozycja = napis.find(szukaj);
+	out << pozycja << endl;
+	
+
+	Pudelko<int> p(42);
+	p.wyswietl();
+	
+	string nazwa = "pliczekBinaren.bin";
+	string nazwa1 = "pliczekTekstowy.txt";
+	double liczba = 2345.5;
+	Zapis(nazwa, liczba);
+	Odczyt(nazwa);
+	//Zapis2(nazwa1, liczba);
+	//Odczyt2(nazwa1);
+
+	Licznik licznik;
+
+	// Tworzenie wątków z różnymi metodami synchronizacji
+	thread t1(&Licznik::zwiekszLockGuard, &licznik, 5);
+	thread t2(&Licznik::zwiekszUniqueLock, &licznik, 10);
+	// Pokazanie wartości w wątku głównym
+	thread t3(&Licznik::pokazLicznik, &licznik);
+
+	t1.join();
+	t2.join();
+	t3.join();
+
+	Wojownik woj;
+	Mag mag;
+
+	woj.atak();  //"Wojownik uderza mieczem!"
+	mag.atak();  //"Mag rzuca zaklęcie!"
 	*/
 
-string napis = "Ala ma kota";
-string szukaj = "kot";
-size_t pozycja = napis.find(szukaj);
-cout << pozycja << endl;
-	
+	Dane osoba("Jan Kowalski");
+	osoba.pokaz();
+
+	Gra::Postac bohater;
+	pokaz(bohater);  //ADL automatycznie znajduje `Gra::pokaz()`
+
 	return 0;
 }
+
+
+
+
+

@@ -128,21 +128,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cpp0x.cpp" />
+    <ClCompile Include="Dane.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PlikiBinarne.cpp" />
     <ClCompile Include="polimorfizm.cpp" />
     <ClCompile Include="strumienie.cpp" />
     <ClCompile Include="ulamek.cpp" />
     <ClCompile Include="Zad1_1-1_27.cpp" />
     <ClCompile Include="Zad1_28-1_40.cpp" />
     <ClCompile Include="Zad2_1-2_20.cpp" />
+    <ClCompile Include="Zadanie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpp0x.h" />
+    <ClInclude Include="Dane.h" />
+    <ClInclude Include="PlikiBinarne.h" />
     <ClInclude Include="polimorfizm.h" />
     <ClInclude Include="strumienie.h" />
+    <ClInclude Include="szablony.h" />
     <ClInclude Include="ulamek.h" />
     <ClInclude Include="Zad1_1-1_27.h" />
     <ClInclude Include="Zad1_28-1_40.h" />
+    <ClInclude Include="Zadanie.h" />
     <ClInclude Include="zad_2_1-2_20.h" />
   </ItemGroup>
   <ItemGroup>
